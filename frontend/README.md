@@ -1,3 +1,11 @@
+# Docker Build Command
+`docker build -f Dockerfile.dev -t USERNAME:frontend .`
+
+# Docker Run Command
+
+`docker run -it -p 3000:3000 -v /home/node/app/node_modules -v ~/git/github/bcbowen/DockerAndKubernetesCourse/frontend:/home/node/app USERNAME:frontend`
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
