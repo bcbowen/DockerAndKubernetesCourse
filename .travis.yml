@@ -4,7 +4,7 @@ services:
   - docker
 
 before_install:
-  - docker build -t bcbowen/docker_course -f frontend/Dockerfile.dev .
+  - docker build -t bcbowen/docker-react -f frontend/Dockerfile.dev .
 
 script:
-  - docker run -e CI=true USERNAME/docker-react npm run test
+  - docker run -e CI=true bcbowen/docker-react npm run test
