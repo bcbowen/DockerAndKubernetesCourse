@@ -4,19 +4,35 @@ services:
   - docker
 
 before_install:
-  - docker build -t bcbowen/docker-react -f Dockerfile.dev .
+  - docker build -t bcbowen/docker-react -f ./client/Dockerfile.dev ./client
 
 script:
   - docker run -e CI=true bcbowen/docker-react npm run test
 
-deploy: 
+after_success:
+  - docker build -t bcbowen/multi-client ./client
+  - docker build -t bcbowen/multi-nginx ./nginx
+  - docker build -t bcbowen/multi-server ./server
+  - docker build -t bcbowen/multi-worker ./worker
+
+  # login to docker cli
+
+  - echo "$DOCKER_PASSWORD" | docker login -u "" "$DOCKER_ID" --password-stdin
+
+  # take images and push to docker hub
+  - docker push bcbowen/multi-client
+  - docker push bcbowen/multi-nginx
+  - docker push bcbowen/multi-server
+  - docker push bcbowen/multi-worker
+
+deploy:
   provider: elasticbeanstalk
-  region: "us-east-1"
-  app: "docker-react"
-  env: "Dockerreact-env"
-  bucket_name: "elasticbeanstalk-us-east-1-966489445277"
-  bucket_path: "docker-react"
-  on: 
+  region: 'us-east-1'
+  app: 'docker-react'
+  env: 'Dockerreact-env'
+  bucket_name: 'elasticbeanstalk-us-east-1-966489445277'
+  bucket_path: 'docker-react'
+  on:
     branch: master
   access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY    
+  secret_access_key: $AWS_SECRET_KEY
